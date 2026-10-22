@@ -100,21 +100,30 @@ export async function fetchReplies(postId) {
     }
 }
 
+/*
+ * Settings-style writes (delete, resolve/reopen markers, DM opt-out) skip the
+ * 30-second cooldown in microblog-rate-limit.js: it exists to slow down new
+ * content, and resolving a post shouldn't lock someone out of replying.
+ */
+async function sendWithoutCooldown(path, method, body) {
+    const response = await fetch(pythonURI + path, {
+        ...fetchOptions,
+        method,
+        body: JSON.stringify(body)
+    });
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+}
+
 /**
  * Delete a microblog post (the server only allows its writer or an Admin)
  * @param {number|string} id - Post ID
  * @returns {Promise<Object>} - Server confirmation or error
  */
 export async function deletePost(id) {
-    const response = await fetch(pythonURI + '/api/microblog', {
-        ...fetchOptions,
-        method: 'DELETE',
-        body: JSON.stringify({ id })
-    });
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response.json();
+    return sendWithoutCooldown('/api/microblog', 'DELETE', { id });
 }
 
 /*
@@ -152,7 +161,7 @@ export async function fetchDmOptOutPosts(topicPath) {
  * @returns {Promise<Object|null>} - The new marker post when turning DMs off
  */
 export async function setDmOptOut(topicPath, optOut, existingOptOut) {
-    if (optOut) return createPost({ content: DM_OFF_MARKER, topicPath });
+    if (optOut) return sendWithoutCooldown('/api/microblog', 'POST', { content: DM_OFF_MARKER, topicPath });
     if (existingOptOut) await deletePost(existingOptOut.id);
     return null;
 }
@@ -190,7 +199,7 @@ const REOPENED_MARKER = '[[microblog:reopened]]';
  */
 export async function setPostResolved(postId, resolved, resolverUid) {
     const marker = resolved ? RESOLVED_MARKER : REOPENED_MARKER;
-    return createReply({ postId, content: `${marker} ${resolverUid}` });
+    return sendWithoutCooldown('/api/microblog/reply', 'POST', { postId, content: `${marker} ${resolverUid}` });
 }
 
 /**
