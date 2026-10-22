@@ -177,6 +177,9 @@ Common layout classes:
 - `ocs__stack`: a vertical stack with a 1rem gap between its children, so they
   need no margins; `ocs__stack--wide` uses the 1.5rem gap between cards.
   Children stretch to the full width, so put buttons in an `ocs__links` row.
+- `ocs__split`: two equal columns; `ocs__split ocs__split--aside` makes the first
+  a narrow list (14 to 18rem) beside a wide pane. Both become one column at 768px
+  and below. Messages (`/dm`) puts its conversation list beside the open chat this way.
 
 See [`elements/containers`](elements/containers), [`elements/grids`](elements/grids),
 and [`grids.md`](../../_projects/lessons/sass/navigation/grids.md).
@@ -202,7 +205,7 @@ and [`grids.md`](../../_projects/lessons/sass/navigation/grids.md).
 - A range slider in a field fills it and takes the accent color.
 
 See [`elements/forms/fields`](elements/forms/fields). The Profile page
-(`/profile/v2`) lays out its account form and skill check-in this way.
+(`/profile`) lays out its account form and skill check-in this way.
 
 ### Avatars
 
@@ -412,10 +415,14 @@ Everything else comes from the board, so any board works as it is. Columns
 follow the board's own order: familiar names share a stage's column ("Todo",
 "To Do" and "Ready" are all To do, "Blocked" is In progress), any other column
 keeps its own name, and cards with no status get a "No status" column, as on
-GitHub. A Backlog column starts hidden behind a toggle, and so does No status on
-a board that has a Backlog of its own. Only UGRC-CSA's note columns ("Team Map",
+GitHub. The backlog keeps the board's own name (the OCS issue lifecycle calls it
+"Parking Lot") and starts hidden behind a toggle, and so does No status on a
+board that has a backlog of its own. Only UGRC-CSA's note columns ("Team Map",
 "Reflections") are left out. Cards show their number, a `People` field or the
-assignees, and once done, a `Shipped` date or the day they closed. The board
+assignees, and once done, a `Shipped` date or the day they closed. Under that is
+the evidence for the column's exit gate: how many boxes of the card's checklist
+are ticked (`☑ 3/4`), and the pull requests linked to its issue (`PR #123`,
+marked merged, draft or closed). Both are in the accent once complete. The board
 keeps a copy for 10 minutes, because visitors without a token share 60 GitHub
 requests an hour per network, and keeps showing that copy, with a note, when
 GitHub doesn't answer.
@@ -428,7 +435,8 @@ Kanban classes (`assets/js/kanban-board.js` builds them):
   top, with more accent the closer the stage is to done; a column of the board's
   own name gets backlog's quiet line.
 - `ocs__kanban-item`: a card, with `ocs__kanban-kicker`, `ocs__kanban-name` and
-  `ocs__kanban-note` for its three lines.
+  `ocs__kanban-note` for its three lines, and `ocs__kanban-evidence` for its row
+  of evidence pills.
 
 The names avoid the suffixes `_sass/capstone/infograph.scss` restyles (`-card`,
 `-title` and others), so the board looks the same inside a capstone's
