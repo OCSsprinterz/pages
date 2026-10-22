@@ -98,6 +98,7 @@ while preserving all critical instructions. The agent must still communicate wit
 * 新项目遵循 [_projects/REGISTRATION.md](_projects/REGISTRATION.md) 注册/构建约定；架构示例见 [_projects/ARCHITECTURE.md](_projects/ARCHITECTURE.md)。
 * 样式优先使用 SCSS；主题切换与样式约定见 [README.md](README.md)。
 * 主题预设（[assets/js/user-preferences.js](assets/js/user-preferences.js)）会用 `!important` 把所有 `span`、`div`、`p`、`li` 和标题改成主题文字色。按钮的图标和文字要直接写在 `ocs__btn` 里（像 [_layouts/post.html](_layouts/post.html) 的 Submit 按钮），不要包在 `<span>` 里，否则 `fill` 按钮上的文字会变成主题文字色，可能看不清。
+* Profile v2（`/profile/v2`）：[_layouts/profile-v2.html](_layouts/profile-v2.html) 只放标记（OCS 语法，无页面样式表），行为在 [assets/js/profile/](assets/js/profile/)：`profile-page.js` 启动 `profile-account.js`、`profile-classes.js`、`profile-personas.js`、`profile-skills.js`、`profile-face.js`；纯函数在 `profile-model.js`，测试：`node --test tests/profile_model.test.mjs`。表单的载入值必须在异步加载填好字段之后再记录：之前与仍为空的字段比较，使 Save 重发所有字段（包括 User ID）并弹出“will be logged out”提示。每个字段用 `assets/js/api/profile.js` 中共享的 `putUpdate`/`postUpdate`（结果为 true 或 false）保存到 Flask（`PUT /api/user`）和 Spring（`POST /api/person/update`），并等待两者。
 * Mermaid 图源里不要写 `var(--panel)` 或 `style` 色值：括号会被当成节点语法。颜色由 [_includes/mermaid.html](_includes/mermaid.html) 读取偏好变量，并由 [user-preferences.scss](_sass/open-coding/theme/user-preferences.scss) 的 `.mermaid` 规则在主题切换后保持同步。
 
 ### 后端边界

@@ -174,9 +174,46 @@ Common layout classes:
 - `ocs__grid--standard`, `ocs__grid--card`, `ocs__grid--gallery`: grid variants
 - `cols-2`, `cols-3`, `cols-4`: standard-grid column counts
 - `ocs__grid-cell--header`, `--accent`, `--muted`, `--wide`: cell modifiers
+- `ocs__stack`: a vertical stack with a 1rem gap between its children, so they
+  need no margins; `ocs__stack--wide` uses the 1.5rem gap between cards.
+  Children stretch to the full width, so put buttons in an `ocs__links` row.
 
 See [`elements/containers`](elements/containers), [`elements/grids`](elements/grids),
 and [`grids.md`](../../_projects/lessons/sass/navigation/grids.md).
+
+### Form fields
+
+```html
+<div class="ocs__grid--col2">
+  <div class="ocs__field">
+    <label class="ocs__label" for="email">Email</label>
+    <input class="ocs__input" id="email" type="email" aria-describedby="email-help">
+    <small id="email-help">We send grades here.</small>
+  </div>
+  <div class="ocs__field">
+    <label class="ocs__label" for="effort">Effort: <output for="effort">3</output> of 5</label>
+    <input id="effort" type="range" min="1" max="5" value="3">
+  </div>
+</div>
+```
+
+- `ocs__field`: a label, its control at the full width of the field, and
+  optional help text in a plain `<small>`, evenly spaced.
+- A range slider in a field fills it and takes the accent color.
+
+See [`elements/forms/fields`](elements/forms/fields). The Profile page
+(`/profile/v2`) lays out its account form and skill check-in this way.
+
+### Avatars
+
+```html
+<abbr class="ocs__avatar" title="Ada Lovelace">AL</abbr>
+```
+
+`ocs__avatar`: a round avatar with a person's initials in the accent color.
+Write it as an `<abbr>` with the full name in `title`, not a `<span>` or
+`<div>`: preset themes recolor every span and div to the text color. See
+[`elements/avatars`](elements/avatars).
 
 ### Tables
 
@@ -289,9 +326,9 @@ Submissions all use this for their tab bars.
 
 How a page shows/hides the modal (a `hidden`/`open` class, an
 `aria-hidden` attribute) is up to the page — this only styles the chrome.
-See [`elements/modals`](elements/modals). Dashboard and Analytics
-Dashboard use the plain card+close shape; Calendar uses the full
-header/actions shape.
+See [`elements/modals`](elements/modals).
+Dashboard and Analytics Dashboard use the plain card+close shape; Calendar
+and Profile's face scanner use the full header/actions shape.
 
 ### Card headers
 
@@ -305,7 +342,26 @@ header/actions shape.
 ```
 
 `ocs__card-header`: a title/action row inside a card (flex,
-space-between, aligned). See [`elements/capstone`](elements/capstone).
+space-between, aligned). An `ocs__section-title` in the row drops its bottom
+margin, so it sits level with the action. See [`elements/capstone`](elements/capstone).
+
+### Picker cards
+
+```html
+<div class="ocs__hub-grid" role="group" aria-label="Student archetype">
+  <button type="button" class="ocs__hub-card ocs__hub-card--selected" aria-pressed="true">
+    <strong class="ocs__hub-card-title">Technologist</strong>
+  </button>
+  <button type="button" class="ocs__hub-card" aria-pressed="false">
+    <strong class="ocs__hub-card-title">Scrummer</strong>
+  </button>
+</div>
+```
+
+An `ocs__hub-card` can also be one choice in a picker: a `<button>` fills its
+grid cell with its content at the top. Mark the current choice with
+`ocs__hub-card--selected` and `aria-pressed="true"`. Profile's persona groups
+use this.
 
 ### Loading spinner
 

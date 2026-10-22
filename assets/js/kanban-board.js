@@ -97,6 +97,8 @@ export function pickFields(fields, filterName) {
     group: filterName ? findField(fields, 'single_select', filterName) : null,
     people: findField(fields, 'multi_select', 'People'),
     shipped: findField(fields, 'date', 'Shipped'),
+    priority: findField(fields, 'single_select', 'Priority'),
+    topic: findField(fields, 'single_select', 'Topic'),
   };
 }
 
@@ -184,6 +186,8 @@ export function normalizeBoard({ project, fields, items }, { filterName = '', ur
       status,
       column: column.key,
       group: optionName(valueOf(item, picked.group)),
+      priority: optionName(valueOf(item, picked.priority)),
+      topic: optionName(valueOf(item, picked.topic)),
       people,
       shipped: dayOf(valueOf(item, picked.shipped)) || (stage === 'done' ? dayOf(content.merged_at || content.closed_at) : null),
     });
@@ -262,7 +266,7 @@ export async function refreshBoard(ref, { filterName = '', meta = null, metaAt =
     fetchedMetaAt = now;
   }
   const picked = pickFields(fields, filterName);
-  const ids = [picked.status, picked.group, picked.people, picked.shipped].filter(Boolean).map((f) => f.id);
+  const ids = [picked.status, picked.group, picked.people, picked.shipped, picked.priority, picked.topic].filter(Boolean).map((f) => f.id);
   const items = [];
   let next = `${API}/${ref.apiPath}/items?per_page=100${ids.length ? `&fields=${ids.join(',')}` : ''}`;
   for (let page = 0; next && page < MAX_PAGES; page += 1) {
@@ -363,6 +367,8 @@ function cardLink(card, showGroup) {
   link.appendChild(el('div', 'ocs__kanban-name', card.title));
   const note = [card.people.join(', '), card.stage === 'done' && card.shipped && shortDay(card.shipped)].filter(Boolean).join(' · ');
   if (note) link.appendChild(el('div', 'ocs__kanban-note', note));
+  if (card.priority) link.appendChild(el('div', 'ocs__kanban-note', `Priority: ${card.priority}`));
+  if (card.topic) link.appendChild(el('div', 'ocs__kanban-note', `Topic: ${card.topic}`));
   return link;
 }
 
@@ -519,7 +525,7 @@ async function mountBoard(section) {
     return;
   }
   const filterName = section.dataset.filter || '';
-  const key = `ocs-kanban:v2:${ref.apiPath}:${filterName}`;
+  const key = `ocs-kanban:v3:${ref.apiPath}:${filterName}`;
   const view = boardView(section);
   let entry = readEntry(key);
   if (entry?.board) view.show(entry.board);

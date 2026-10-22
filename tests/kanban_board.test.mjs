@@ -339,3 +339,35 @@ test('saved copies survive a round trip, and blocked or broken storage reads as 
     assert.equal(readEntry('ocs-kanban:v1:test', blocked), null);
     assert.doesNotThrow(() => writeEntry('ocs-kanban:v1:test', { fetchedAt: 5 }, blocked));
 });
+
+
+test('Area filters and Priority and Topic values survive normalization and fetching', async () => {
+    const priority = { id: 20, name: 'Priority', data_type: 'single_select', options: [option('High')] };
+    const topic = { id: 21, name: 'Topic', data_type: 'single_select', options: [option('Chatbot')] };
+    const area = { id: 22, name: 'Area', data_type: 'single_select', options: [option('Frontend'), option('Backend')] };
+    const fields = [...MINIMAL_FIELDS, priority, topic, area];
+    const items = ['Frontend', 'Backend'].map((name, index) => item(900 + index, 'DraftIssue', draft(name + ' task'), [
+        statusValue('Todo'),
+        { id: 20, value: option('High') },
+        { id: 21, value: option('Chatbot') },
+        { id: 22, value: option(name) },
+    ], '2026-10-22T00:00:00Z'));
+    const fetched = [];
+    const fetchImpl = async (url) => {
+        fetched.push(url);
+        if (url.endsWith('/fields')) return json(fields);
+        if (url.includes('/items?')) return json(items);
+        return json(PROJECT);
+    };
+    const entry = await refreshBoard(parseBoardUrl(BOARD_URL), { filterName: 'Area', fetchImpl, now: 0 });
+    assert.deepEqual(entry.board.groups, ['Frontend', 'Backend']);
+    assert.equal(filterCards(entry.board, 'Backend')[0].title, 'Backend task');
+    assert.equal(entry.board.cards[0].priority, 'High');
+    assert.equal(entry.board.cards[0].topic, 'Chatbot');
+    const requested = new URL(fetched.find(url => url.includes('/items?'))).searchParams.get('fields').split(',');
+    assert.ok(requested.includes('20'));
+    assert.ok(requested.includes('21'));
+    const empty = normalizeBoard({ project: PROJECT, fields, items: [item(999, 'DraftIssue', draft('Unassigned'), [statusValue('Todo')], '2026-10-22T00:00:00Z')] }, { url: BOARD_URL });
+    assert.equal(empty.cards[0].priority, '');
+    assert.equal(empty.cards[0].topic, '');
+});

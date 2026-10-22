@@ -1,5 +1,5 @@
 <section class="gist-connection" aria-labelledby="gist-connection-heading">
-  <h2 id="gist-connection-heading">GitHub Gist connection</h2>
+  <h2 class="ocs__section-title" id="gist-connection-heading">GitHub Gist connection</h2>
   <p>Create code submissions and exports under your own GitHub account.</p>
   <p id="gist-connection-state" role="status" aria-live="polite">Checking connection…</p>
   <details class="gist-connection-instructions">
@@ -18,7 +18,7 @@
     <p>Treat your token like a password: never share it or commit it. When it expires, create a new one and use <strong>Replace token</strong> here.</p>
   </details>
   <form id="gist-connection-form">
-    <label for="gist-connection-token">GitHub personal access token</label>
+    <label class="ocs__label" for="gist-connection-token">GitHub personal access token</label>
     <input class="ocs__input" id="gist-connection-token" type="password" autocomplete="off"
       spellcheck="false" required maxlength="512" aria-describedby="gist-connection-help">
     <p id="gist-connection-help">Use a fine-grained token with Gists: write, or a classic token with the gist scope.

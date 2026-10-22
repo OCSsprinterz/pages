@@ -4,7 +4,7 @@ import Character from '@assets/js/GameEnginev1.1/essentials/Character.js';
 import SplineBarrier from '@assets/js/GameEnginev1.1/essentials/SplineBarrier.js';
 import TimeLapScreen from './TimeLapScreen.js';
 
-class GameLevelAutumn {
+class GameLevelTesting {
   constructor(gameEnv) {
     const path = gameEnv.path;
     const background_data = {
@@ -87,4 +87,4 @@ class GameLevelAutumn {
   }
 }
 
-export default GameLevelAutumn;
+export default GameLevelTesting;
