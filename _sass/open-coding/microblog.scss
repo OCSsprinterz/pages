@@ -378,4 +378,200 @@
   min-height: 1.2rem;
 }
 
+/* Status filters: Active / Mine / History */
+.microblog-status-filters {
+  display: flex;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.microblog-status-filter {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #e5e7eb;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+
+  & + & {
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &.is-active {
+    background: #2563eb;
+    color: #fff;
+  }
+}
+
+/* Page-author DM setting (checkbox row under the filters) */
+.microblog-dm-setting {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.375rem;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.85rem;
+  color: #e5e7eb;
+  cursor: pointer;
+
+  &[hidden] {
+    display: none;
+  }
+
+  input {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    accent-color: #10b981;
+    cursor: pointer;
+  }
+}
+
+.microblog-status {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: #e5e7eb;
+
+  &:empty {
+    display: none;
+  }
+}
+
+/* Post layout: topic line (+ Resolved badge), content, then one row of actions */
+.microblog-post-topic {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+/* Never wraps: four 1.75rem buttons plus Resolve fit the narrowest panel, and
+   Resolve drops its label on small screens (see the media query below) */
+.microblog-post-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.5rem;
+}
+
+/* Edit / Reply: matching square icon buttons */
+.microblog-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 0.375rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* Delete: same square, turns red on hover */
+  &.is-danger:hover:not(:disabled) {
+    background: #dc2626;
+    border-color: #dc2626;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* Resolve / Reopen: same height as the icon buttons, with a label, at the row's right end */
+.microblog-resolve-btn {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 0.3rem;
+  margin-left: auto;
+  height: 1.75rem;
+  padding: 0 0.65rem;
+  border: 1px solid #10b981;
+  border-radius: 0.375rem;
+  background: #10b981;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+
+  &:hover:not(:disabled) {
+    background: #059669;
+    border-color: #059669;
+  }
+
+  &:disabled {
+    background: #94a3b8;
+    border-color: #94a3b8;
+    cursor: not-allowed;
+  }
+}
+
+/* Reopen is the secondary action on a resolved post, so it's outlined */
+.microblog-resolve-btn.is-reopen {
+  background: transparent;
+  color: #6ee7b7;
+
+  &:hover:not(:disabled) {
+    background: rgba(16, 185, 129, 0.2);
+    color: #fff;
+  }
+}
+
+/* Phones: Resolve / Reopen become icon squares (the title still says which) */
+@media (max-width: 480px) {
+  .microblog-resolve-btn {
+    justify-content: center;
+    width: 1.75rem;
+    padding: 0;
+
+    span {
+      display: none;
+    }
+  }
+}
+
+.microblog-resolved-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.25);
+  color: #6ee7b7;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
 /* Add more microblog-specific styles as needed */

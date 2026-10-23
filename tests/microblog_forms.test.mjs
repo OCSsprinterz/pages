@@ -27,6 +27,8 @@ for (const formId of ['microblog-form', 'reply-form']) {
             document: { getElementById: id => elements[id] },
             pagePermalink: '/microblog',
             createPost: write, updatePost: write, createReply: write,
+            // Page-author DMs run after a successful save; this test only covers the form
+            pageAuthors: [], postsById: new Map(), notifyAuthors: async () => {},
             closeModal: () => closed++, closeReplyModal: () => closed++,
             renderMicroblogTable: () => {}, alert: message => alerts.push(message)
         });
