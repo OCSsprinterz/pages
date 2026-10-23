@@ -13,9 +13,11 @@ are presented. A course, sprint, week, or card is a configured instance or view,
 not a separate software system.
 
 Blogs provides the underlying document publishing and viewing foundation.
-Courses composes that foundation with schedules, navigation, Calendar and Chat
-to present a curriculum. See [Blogs architecture](../../blogs/docs/ARCHITECTURE.md)
-for the publishing, authoring and interactive-document model.
+Courses composes that foundation with schedules, navigation, Calendar, and
+course-wide announcements. The site shell also provides a site-wide Microblog;
+weekly chats are not generated. See
+[Blogs architecture](../../blogs/docs/ARCHITECTURE.md) for the publishing,
+authoring and interactive-document model.
 
 ## Content hierarchy
 
@@ -34,7 +36,6 @@ Courses - collection, selector, and navigation system
     │               ├── Introduction and learning goals
     │               ├── Document collection
     │               │   └── Lesson / assignment / reference document
-    │               └── Week-scoped Group Chat
     └── Blogs view
         ├── Post catalog
         └── Post reader
@@ -87,7 +88,7 @@ a functional system does not necessarily correspond to one directory or service.
 | Grading | Evaluate submitted evidence and expose feedback/results | Shared helpers and backend services; derives from Submissions |
 
 Calendar and Chat are external capabilities from the course domain's perspective.
-Their course-facing announcement, week and document-chat views and
+Their course-facing announcement and document-chat views and
 calendar/announcement adapters live in Courses. Chat uses scoped groups and
 document markers to associate conversations with the appropriate view.
 Authentication, subscriptions, reconnection and deduplication belong to the
@@ -107,6 +108,8 @@ communication infrastructure.
 - Course selection and per-course/per-panel navigation state.
 - Sprint views, course chooser and the global catalog's course
   selector page. That page consumes the Blogs layout.
+- Course-wide announcements on the home page. There are no week-scoped chat
+  routes; the site-wide Microblog remains part of the site shell.
 
 ### Blogs owns reusable document viewing
 
