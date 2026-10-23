@@ -147,6 +147,12 @@
   grid-template-columns: 1fr 1fr;
 }
 
+// A narrow list beside a wide pane, like Messages' conversations beside the open chat.
+// Declared before the 768px rule below, so it becomes one column on phones too.
+.ocs__split--aside {
+  grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
+}
+
 .ocs__facts {
   grid-template-columns: repeat(3, 1fr);
 }
