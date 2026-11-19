@@ -10,6 +10,7 @@ export const LOG_TEXTS = Object.freeze({
   you: 'You',
   edited: '(edited)',
   editMessage: 'Edit message',
+  addToCalendar: 'Add to calendar',
   deleteMessage: 'Delete message',
   imageFrom: 'Image from {name}',
   openImage: 'View image from {name} larger',
@@ -51,7 +52,7 @@ export function shownBody(message, formatBody) {
   }
 }
 
-export function createMessageLog(element, { richText, me, onEdit, onDelete, readOnly = false, texts = {}, formatBody = null }) {
+export function createMessageLog(element, { richText, me, onEdit, onDelete, onSchedule = null, readOnly = false, texts = {}, formatBody = null }) {
   if (formatBody !== null && typeof formatBody !== 'function') {
     throw new TypeError('createMessageLog: formatBody must be a function or null');
   }
@@ -327,15 +328,23 @@ export function createMessageLog(element, { richText, me, onEdit, onDelete, read
         main.appendChild(imageLink);
       }
     }
-    // A message saved before ids existed can't be edited or deleted.
-    if (!readOnly && isSelf && message.id && !message.deleted) {
-      const actions = document.createElement('div');
-      actions.className = 'chat-msg-actions';
-      actions.append(
-        actionButton('fa-pen', text.editMessage, () => onEdit(messages.get(message.key))),
-        actionButton('fa-trash', text.deleteMessage, button => onDelete(messages.get(message.key), button)),
-      );
-      main.appendChild(actions);
+    // A message saved before ids existed can't be edited or deleted. Anyone's message can go
+    // on your calendar, so that button is not limited to your own.
+    if (!readOnly && message.id && !message.deleted) {
+      const buttons = [];
+      if (onSchedule) buttons.push(actionButton('fa-calendar-plus', text.addToCalendar, button => onSchedule(messages.get(message.key), button)));
+      if (isSelf) {
+        buttons.push(
+          actionButton('fa-pen', text.editMessage, () => onEdit(messages.get(message.key))),
+          actionButton('fa-trash', text.deleteMessage, button => onDelete(messages.get(message.key), button)),
+        );
+      }
+      if (buttons.length) {
+        const actions = document.createElement('div');
+        actions.className = 'chat-msg-actions';
+        actions.append(...buttons);
+        main.appendChild(actions);
+      }
     }
 
     row.append(avatarFor(message, isSelf), main);

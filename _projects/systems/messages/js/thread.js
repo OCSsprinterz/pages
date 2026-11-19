@@ -41,7 +41,7 @@ export const EMPTY_STATES = Object.freeze({
 export function createThread({
   elements, api, socket, richText, me,
   onDmRead = () => {}, onGroupRead = () => {}, onFileShared = () => {},
-  readOnly = false, emptyState = null, texts = {}, formatBody = null,
+  readOnly = false, onSchedule = null, emptyState = null, texts = {}, formatBody = null,
 }) {
   if (emptyState !== null && (typeof emptyState !== 'object' || typeof emptyState.title !== 'string')) {
     throw new TypeError('createThread: emptyState must be null or { title, hint }');
@@ -83,7 +83,7 @@ export function createThread({
   // A read-only pane shows the conversation but can't change it: no composer, and no
   // edit or delete on your own messages.
   const log = createMessageLog(elements.messages, {
-    richText, me, onEdit: beginEdit, onDelete: deleteMessage, readOnly, texts, formatBody,
+    richText, me, onEdit: beginEdit, onDelete: deleteMessage, onSchedule, readOnly, texts, formatBody,
   });
   const composer = readOnly
     ? null
