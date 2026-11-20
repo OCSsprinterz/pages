@@ -23,6 +23,7 @@ same way they reach a direct message.
 | `js/messages-api.js` | Every Spring and Flask request. |
 | `js/message-search.js` | The search box in a direct message's header: debounced query for that chat, matches listed under the header with the match marked, and jumping to the one picked. |
 | `js/schedule-model.js` | "Add to calendar" without the page: the plain text of a message, the date and time it mentions (today, Friday, Nov 20, 3pm...), a starting title, and the request Spring's calendar takes. A message is turned into text once, and the description it writes holds no raw `<`, because `/student/calendar` shows a description as HTML. |
+| `js/message-summary.js` | "Catch me up" in a direct message's header: asks Spring for an AI summary of the chat and shows a short summary, dates (each with Add to calendar, which opens the schedule dialog already filled in) and to-dos, all as plain text, with an AI-can-be-wrong note. |
 | `js/schedule-dialog.js` | The dialog opened by the calendar button on a message: title, day and optional time, then saves one event to your own calendar. A reply's `[[reply:...]]` marker is left out of the text (`richText.stripChatMarkers`). |
 | `js/chat-socket.js` | The STOMP-over-SockJS connection to Spring's `/ws-chat`, one for `/dm` and one for each embed. |
 | `js/messages-model.js` | Pure functions: one message shape for DMs and groups, labels, roles. |
@@ -184,6 +185,8 @@ Spring:
   `GET /api/dm/search?q=` (your direct messages only, 2-100 characters, newest 50;
   add `&conversationId=` for one chat, which is what the page does; group chats are
   not searched)
+- `POST /api/dm/conversations/{id}/summary` (Catch me up: `{summary[], dates[{what,date,time}], todos[], messagesRead}`;
+  reads the chat's latest messages with the caller's own AI key, else the school's; 20 a hour; no database change)
 - `POST /api/calendar/add_event` (Add to calendar: `title`, `date`, `description`, `type`, `period`; no
   `individual`, so Spring files the event under whoever is signed in -- a blank one would show it to everyone.
   The calendar keeps a date only, so a time is written into the title and description)

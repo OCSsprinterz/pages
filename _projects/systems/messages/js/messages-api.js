@@ -29,6 +29,10 @@ export function createMessagesApi({ javaURI, pythonURI, fetchOptions }) {
     currentPerson: () => spring('/api/person/get'),
     searchPeople: query => spring(`/api/people/search?query=${part(query)}`),
 
+    // An AI summary of the chat: what happened, the dates it mentions and the to-dos. Spring
+    // reads the recent messages itself, so nothing is sent but the request.
+    summarizeDm: id => spring(`/api/dm/conversations/${part(id)}/summary`, 'POST'),
+
     conversations: () => spring('/api/dm/conversations'),
     startConversation: otherPersonIds => spring('/api/dm/conversations', 'POST', { otherPersonIds }),
     dmMessages: id => spring(`/api/dm/conversations/${part(id)}/messages`),

@@ -34,6 +34,12 @@ export function initScheduleDialog({
     // No date mentioned: today, so the form is never empty and Save works after a title tweak.
     elements.date.value = guessEventDate(text, now()) || dateKey(now());
     elements.time.value = guessEventTime(text) || '';
+    // A caller that already knows the day (a date the AI summary found) says so, and that
+    // wins over guessing it from the text.
+    const known = source.prefill || {};
+    if (known.title) elements.title.value = String(known.title).slice(0, MAX_TITLE_LENGTH);
+    if (known.date) elements.date.value = known.date;
+    if (known.time !== undefined) elements.time.value = known.time;
     elements.save.disabled = false;
     show('');
     dialog.open(opener);

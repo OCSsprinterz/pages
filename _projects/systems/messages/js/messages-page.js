@@ -12,6 +12,7 @@ import {
   canFormGroups, conversationLabel, groupSubtitle, isClassGroup, isCourseChannel, sortGroups,
 } from './messages-model.js';
 import { initNewChat } from './new-chat.js';
+import { initMessageSummary } from './message-summary.js';
 import { initScheduleDialog } from './schedule-dialog.js';
 import { conversationHref, createSidebar } from './sidebar.js';
 import { createThread } from './thread.js';
@@ -56,10 +57,12 @@ export async function startMessagesPage({ config, richText }) {
   if (!me) return;
   const state = { groups: [], conversations: [], active: null, query: '' };
   let messageSearch = null; // set once the search box is wired up, below
+  let messageSummary = null; // and the Catch me up button
   // The search box in the chat header searches the open direct message, so it is told which.
   const syncSearchScope = () => {
     const open = state.active?.kind === 'dm' ? findItem('dm', state.active.id) : null;
     messageSearch?.setConversation(open ? open.id : null, open ? conversationLabel(open) : '');
+    messageSummary?.setConversation(open ? open.id : null);
   };
   const findItem = (kind, id) => (kind === 'group' ? state.groups : state.conversations).find(item => item.id === id);
 
@@ -324,6 +327,15 @@ export async function startMessagesPage({ config, richText }) {
       date: byId('scheduleDate'), time: byId('scheduleTime'), status: byId('scheduleStatus'), save: byId('scheduleSave'),
     },
   });
+  messageSummary = initMessageSummary({
+    api,
+    // A date the AI found opens the same dialog as a message's calendar button, filled in.
+    onAddToCalendar: (item, opener) => scheduleDialog.open({ body: item.what, prefill: { title: item.what, date: item.date, time: item.time } }, opener),
+    elements: {
+      button: byId('messagesSummaryButton'), panel: byId('messagesSummaryPanel'), status: byId('messagesSummaryStatus'),
+      body: byId('messagesSummaryBody'), note: byId('messagesSummaryNote'), close: byId('messagesSummaryClose'),
+    },
+  });
   messageSearch = initMessageSearch({
     api,
     me,
@@ -335,7 +347,7 @@ export async function startMessagesPage({ config, richText }) {
       status: byId('messagesSearchStatus'), results: byId('messagesSearchResults'),
     },
   });
-  syncSearchScope(); // a conversation opened from the address before the box existed
+  syncSearchScope(); // a conversation opened from the address before the box and the button existed
   if (canFormGroups(me)) {
     initGroupFormation({
       api,

@@ -140,3 +140,14 @@ test('a failed save keeps the dialog open, says why and allows another try', asy
   assert.equal(calls, 2);
   assert.equal(done.length, 1);
 });
+
+test('a caller that knows the day (a date from the AI summary) fills the form with it', () => {
+  const { elements, dialog } = makeDialog({ addCalendarEvent: async () => ({}) });
+  dialog.open({ id: 0, key: '0', body: 'Demo', prefill: { title: 'Demo', date: '2026-12-04', time: '15:00' } });
+  assert.equal(elements.title.value, 'Demo');
+  assert.equal(elements.date.value, '2026-12-04');
+  assert.equal(elements.time.value, '15:00');
+
+  dialog.open({ id: 0, key: '0', body: 'Demo', prefill: { title: 'Demo', date: '2026-12-04', time: '' } });
+  assert.equal(elements.time.value, '', 'a day with no time leaves the time empty');
+});

@@ -96,6 +96,11 @@ the open conversation each start with a bar of the same height.
         <form class="dm__search" id="messagesSearchForm" role="search" autocomplete="off" hidden>
           <input class="ocs__input" id="messagesSearch" type="search" placeholder="Search this chat" aria-label="Search this chat" disabled>
         </form>
+        {%- comment -%}
+          "Catch me up": asks Spring's AI to summarize the open direct message. message-summary.js
+          shows the button only while a DM is open and draws the answer in the panel below.
+        {%- endcomment -%}
+        <button type="button" class="dm__action" id="messagesSummaryButton" hidden>Catch me up</button>
         <div class="dm__thread-actions hidden" id="messagesGroupActions">
           <button type="button" class="dm__action" id="messagesMembers">Members</button>
           <button type="button" class="dm__action" id="messagesFiles">Files</button>
@@ -106,6 +111,16 @@ the open conversation each start with a bar of the same height.
       <div class="dm__search-panel" id="messagesSearchPanel" hidden>
         <p class="dm__search-status" id="messagesSearchStatus" role="status"></p>
         <div class="dm__list dm__search-results" id="messagesSearchResults"></div>
+      </div>
+
+      <div class="dm__summary" id="messagesSummaryPanel" hidden>
+        <div class="dm__summary-head">
+          <strong class="dm__summary-title">Catch me up</strong>
+          <button type="button" class="dm__action" id="messagesSummaryClose">Close</button>
+        </div>
+        <p class="dm__summary-status" id="messagesSummaryStatus" role="status"></p>
+        <div id="messagesSummaryBody"></div>
+        <p class="dm__summary-note" id="messagesSummaryNote" hidden>Written by AI from the latest messages in this chat. It can get things wrong, so check anything that matters.</p>
       </div>
 
       <div class="dm__log" id="messagesLog" role="log" aria-live="polite" tabindex="0"></div>

@@ -274,3 +274,52 @@
 .dm .ocs__nav-card:has(.ocs__nav-card-cta) .ocs__nav-card-title {
   font-weight: 700;
 }
+
+// "Catch me up": the AI's summary, in a drawer under the header like the search matches.
+// What it says is short: a few sentences, the dates it found and the to-dos.
+.dm__summary {
+  max-height: 45%;
+  flex: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--dm-space-sm) calc(var(--dm-gutter) - var(--dm-space-xs));
+  border-bottom: 1px solid var(--dm-rule);
+  background: var(--dm-surface);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.dm__summary-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dm-space-sm);
+}
+
+.dm__summary-status,
+.dm__summary-note {
+  margin: var(--dm-space-xs) 0;
+  font-size: $text-sm;
+  color: var(--dm-muted);
+}
+
+.dm__summary-label {
+  margin: var(--dm-space-sm) 0 var(--dm-space-xs);
+  font-size: $text-sm;
+  font-weight: 600;
+  color: var(--dm-ink);
+}
+
+.dm__summary-list {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.dm__summary-date {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dm-space-sm);
+}
